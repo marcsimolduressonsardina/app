@@ -45,7 +45,7 @@
 		"@sveltejs/adapter-auto": "3.3.1",
 		"@sveltejs/adapter-vercel": "5.4.6",
 		"@sveltejs/kit": "2.7.3",
-		"@tailwindcss/forms": "0.5.7",
+		"@tailwindcss/forms": "0.5.9",
 		"chart.js": "^4.4.7",
 		"constructs": "^10.4.2",
 		"html5-qrcode": "2.3.8",
