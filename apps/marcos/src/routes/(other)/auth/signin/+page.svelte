@@ -6,8 +6,8 @@
 	import { IconType } from '@/components/generic/icon/icon.enum';
 
 	onMount(() => {
-		authClient.signIn.oauth2({
-			providerId: 'auth0',
+		authClient.signIn.social({
+			provider: 'auth0',
 			callbackURL: '/'
 		});
 	});

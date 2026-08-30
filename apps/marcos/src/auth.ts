@@ -19,6 +19,27 @@ const vercelTrustedOrigins = [
 	.filter((u): u is string => Boolean(u))
 	.map((u) => `https://${u}`);
 
+type Auth0Claims = { storeId: string; priceManager: boolean };
+
+const pendingAuth0Claims = new Map<string, Auth0Claims>();
+
+function claimsFromAuth0Profile(profile: Record<string, unknown>): Auth0Claims {
+	const metadata = profile.app_metadata as Record<string, unknown> | undefined;
+	return {
+		storeId: (metadata?.storeId as string) ?? '',
+		priceManager: (metadata?.priceManager as boolean) ?? false
+	};
+}
+
+async function applyAuth0Claims(user: { email?: string | null }) {
+	const email = user.email?.toLowerCase();
+	if (!email) return;
+	const claims = pendingAuth0Claims.get(email);
+	if (!claims) return;
+	pendingAuth0Claims.delete(email);
+	return { data: claims };
+}
+
 export const auth = betterAuth({
 	secret: AUTH_SECRET,
 	logger: dev ? { level: 'debug' } : undefined,
@@ -32,14 +53,25 @@ export const auth = betterAuth({
 					clientSecret: AUTH_AUTH0_SECRET,
 					discoveryUrl: `${auth0Issuer}/.well-known/openid-configuration`,
 					scopes: ['openid', 'profile', 'email'],
-					mapProfileToUser: (profile) => {
-						const metadata = profile.app_metadata as
-							| Record<string, unknown>
-							| undefined;
+					overrideUserInfo: true,
+					getUserInfo: async (tokens) => {
+						if (!tokens.accessToken) return null;
+						const response = await fetch(`${auth0Issuer}/userinfo`, {
+							headers: { Authorization: `Bearer ${tokens.accessToken}` }
+						});
+						if (!response.ok) return null;
+						const profile = (await response.json()) as Record<string, unknown>;
+						if (typeof profile.email === 'string') {
+							pendingAuth0Claims.set(profile.email.toLowerCase(), claimsFromAuth0Profile(profile));
+						}
 						return {
-							storeId: (metadata?.storeId as string) ?? '',
-							priceManager: (metadata?.priceManager as boolean) ?? false
-						} as Record<string, unknown>;
+							...profile,
+							id: String(profile.sub ?? ''),
+							email: profile.email as string,
+							emailVerified: Boolean(profile.email_verified),
+							name: (profile.name as string) ?? '',
+							image: profile.picture as string | undefined
+						};
 					}
 				}
 			]
@@ -51,14 +83,22 @@ export const auth = betterAuth({
 				type: 'string',
 				required: false,
 				defaultValue: '',
-				input: false
+				input: false,
+				returned: true
 			},
 			priceManager: {
 				type: 'boolean',
 				required: false,
 				defaultValue: false,
-				input: false
+				input: false,
+				returned: true
 			}
+		}
+	},
+	databaseHooks: {
+		user: {
+			create: { before: applyAuth0Claims },
+			update: { before: applyAuth0Claims }
 		}
 	},
 	session: {
