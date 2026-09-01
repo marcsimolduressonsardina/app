@@ -73,21 +73,16 @@ export class AuthService {
 	}
 
 	public static generateUserFromAuth(session?: BetterAuthSession | null): AppUser | undefined {
-		if (
-			session == null ||
-			session.user == null ||
-			session.user.email == null ||
-			(session.user as Record<string, unknown>).storeId == null
-		) {
+		const user = session?.user;
+		if (user?.email == null || !user.storeId) {
 			return undefined;
 		}
 
-		const user = session.user as Record<string, unknown>;
 		return {
-			id: session.user.email,
-			name: session.user.name,
-			storeId: user.storeId as string,
-			priceManager: (user.priceManager as boolean) ?? false
+			id: user.email,
+			name: user.name,
+			storeId: user.storeId,
+			priceManager: user.priceManager ?? false
 		};
 	}
 

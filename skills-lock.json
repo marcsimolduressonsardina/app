@@ -4,7 +4,8 @@
     "better-auth-best-practices": {
       "source": "better-auth/skills",
       "sourceType": "github",
-      "computedHash": "a4c830509e85557b59339d8d93a4e243e9e59c686e7678854d39230e12c2a6dc"
+      "skillPath": "better-auth/best-practices/SKILL.md",
+      "computedHash": "61ba0ef64ed2e7c424401cc848ca33dd6d790a720c44727717dc0c5cba5fc122"
     },
     "shadcn-svelte": {
       "source": "vercel-labs/json-render",
@@ -12,10 +13,17 @@
       "skillPath": "skills/shadcn-svelte/SKILL.md",
       "computedHash": "fcb9b65f29baf8a2e03960d37bceff6a71203aeb962105cf6f78c697c71efc3c"
     },
+    "svelte-code-writer": {
+      "source": "sveltejs/ai-tools",
+      "sourceType": "github",
+      "skillPath": "plugins/claude/svelte/skills/svelte-code-writer/SKILL.md",
+      "computedHash": "6f78193a79906175595ce8e4ca8d726da350eb99035a9544b6553620df5673a1"
+    },
     "svelte-core-bestpractices": {
       "source": "sveltejs/ai-tools",
       "sourceType": "github",
-      "computedHash": "bec11e369679027edf9d4acbe6d9788f8da33dc14b48b874f231d3ba13705324"
+      "skillPath": "plugins/claude/svelte/skills/svelte-core-bestpractices/SKILL.md",
+      "computedHash": "98b4ee346ac45e13740c9f3353b604d5c6e844c96cdc8867052fa961cbdb525d"
     }
   }
 }

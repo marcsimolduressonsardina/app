@@ -12,10 +12,10 @@
 		"@repo/eslint-config": "workspace:*",
 		"@types/aws-lambda": "8.10.162",
 		"@types/eslint": "9.6.1",
-		"@types/node": "26.1.0",
+		"@types/node": "26.4.0",
 		"aws-cdk": "2.1124.1",
-		"esbuild": "0.28.1",
-		"typescript": "6.0.3"
+		"esbuild": "0.28.2",
+		"typescript": "7.0.2"
 	},
 	"type": "module",
 	"dependencies": {
